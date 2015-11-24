@@ -41,6 +41,9 @@ import sys
 import timeit
 
 import numpy
+import Image
+
+from utils import tile_raster_images
 
 import theano
 import theano.tensor as T
@@ -421,6 +424,8 @@ def sgd_optimization_mnist(learning_rate=0.13, n_epochs=1000,
                     # save the best model
                     with open('best_model.pkl', 'w') as f:
                         cPickle.dump(classifier, f)
+    			image = Image.fromarray(tile_raster_images(X=classifier.W.get_value(borrow=True).T, img_shape=(28, 28), tile_shape=(10, 10), tile_spacing=(1, 1))) 
+			image.save('/tmp/sgd%3d.png' % epoch)
 
             if patience <= iter:
                 done_looping = True
@@ -449,6 +454,26 @@ def predict():
 
     # load the saved model
     classifier = cPickle.load(open('best_model.pkl'))
+    mat = classifier.W.get_value()
+    for i in range(0,10):
+        print mat[:i]
+
+    image = Image.fromarray(tile_raster_images(
+       X=classifier.W.get_value(borrow=True).T,
+       img_shape=(28, 28), tile_shape=(10, 10),
+       tile_spacing=(1, 1)))
+    image.save('/tmp/sgd.png')
+
+    #print classifier.params
+    #print classifier.p_y_given_x
+    #print classifier.input
+    #print classifier.y_pred
+    #mat = classifier.W.get_value()
+    #print mat.max()
+    #print mat.mean()
+    #print mat.min()
+#
+#    print classifier.b.get_value()
 
     # compile a predictor function
     predict_model = theano.function(
@@ -461,10 +486,11 @@ def predict():
     test_set_x, test_set_y = datasets[2]
     test_set_x = test_set_x.get_value()
 
-    predicted_values = predict_model(test_set_x[:10])
+    predicted_values = predict_model(test_set_x[:100])
     print ("Predicted values for the first 10 examples in test set:")
     print predicted_values
 
 
 if __name__ == '__main__':
     sgd_optimization_mnist()
+    predict()

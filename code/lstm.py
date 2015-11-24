@@ -569,7 +569,7 @@ def train_lstm(
                 f_update(lrate)
 
                 if numpy.isnan(cost) or numpy.isinf(cost):
-                    print 'bad cost detected: ', cost
+                    print 'NaN detected'
                     return 1., 1., 1.
 
                 if numpy.mod(uidx, dispFreq) == 0:
@@ -595,7 +595,7 @@ def train_lstm(
 
                     history_errs.append([valid_err, test_err])
 
-                    if (best_p is None or
+                    if (uidx == 0 or
                         valid_err <= numpy.array(history_errs)[:,
                                                                0].min()):
 

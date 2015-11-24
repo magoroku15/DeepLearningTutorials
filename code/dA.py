@@ -40,6 +40,8 @@ import theano
 import theano.tensor as T
 from theano.tensor.shared_randomstreams import RandomStreams
 
+from theano import ProfileMode
+
 from logistic_sgd import load_data
 from utils import tile_raster_images
 
@@ -258,7 +260,7 @@ class dA(object):
         return (cost, updates)
 
 
-def test_dA(learning_rate=0.1, training_epochs=15,
+def test_dA(learning_rate=0.1, training_epochs=2,
             dataset='mnist.pkl.gz',
             batch_size=20, output_folder='dA_plots'):
 
@@ -281,6 +283,7 @@ def test_dA(learning_rate=0.1, training_epochs=15,
 
     # compute number of minibatches for training, validation and testing
     n_train_batches = train_set_x.get_value(borrow=True).shape[0] / batch_size
+    print n_train_batches
 
     # start-snippet-2
     # allocate symbolic variables for the data
@@ -312,10 +315,13 @@ def test_dA(learning_rate=0.1, training_epochs=15,
         learning_rate=learning_rate
     )
 
+    profmode = theano.ProfileMode(optimizer='fast_run', linker=theano.gof.OpWiseCLinker())
+
     train_da = theano.function(
         [index],
         cost,
         updates=updates,
+        mode=profmode,
         givens={
             x: train_set_x[index * batch_size: (index + 1) * batch_size]
         }
@@ -334,6 +340,7 @@ def test_dA(learning_rate=0.1, training_epochs=15,
         for batch_index in xrange(n_train_batches):
             c.append(train_da(batch_index))
 
+        profmode.print_summary()
         print 'Training epoch %d, cost ' % epoch, numpy.mean(c)
 
     end_time = timeit.default_timer()
