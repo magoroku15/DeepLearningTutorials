@@ -389,7 +389,11 @@ def test_mlp(learning_rate=0.01, L1_reg=0.00, L2_reg=0.0001, n_epochs=1000,
                            'best model %f %%') %
                           (epoch, minibatch_index + 1, n_train_batches,
                            test_score * 100.))
+<<<<<<< HEAD
                     title = "whatever you want"
+=======
+                    title = ""
+>>>>>>> 311d5ecef7c880123da6f96baf4032a636bdab07
                     plot_pca(classifier, x, train_set_x, train_set_y, index=epoch, title=title)
 
             if patience <= iter:
@@ -428,11 +432,22 @@ def plot_pca(classifier, x_symbol, x_data, y_data, index=0,
     z_data = apply_hidden(x_data.get_value())
     labels = y_data.eval()
 
+<<<<<<< HEAD
     numbers = range(10)
     colors = {0: '#263B1C', 1: '#263374', 2: '#3568B5', 3: '#8A5DDF', 4: '#DBB8EE',
               5: '#46B1C9', 6: '#84C0C6', 7: '#9FB7B9', 8: '#BCC1BA', 9: '#F2E2D2'}
 
     for ax, prod in zip(axes, zip(numbers[:-1], numbers[1:])):
+=======
+    #numbers = range(10)
+    numbers = [0, 1, 2, 3, 4, 5, 6, 7, 9]
+    target = [8, 8, 8, 8, 8, 8, 8, 8, 8]
+    colors = {0: '#263B1C', 1: '#263374', 2: '#3568B5', 3: '#8A5DDF', 4: '#DBB8EE',
+              5: '#46B1C9', 6: '#84C0C6', 7: '#9FB7B9', 8: '#BCC1BA', 9: '#F2E2D2'}
+
+    #for ax, prod in zip(axes, zip(target[:-1], numbers[1:])):
+    for ax, prod in zip(axes, zip(target, numbers)):
+>>>>>>> 311d5ecef7c880123da6f96baf4032a636bdab07
         # print(ax, prod)
         pca = PCA(n_components=2)
         indexer = numpy.arange(len(labels))[numpy.in1d(labels, prod)]
@@ -456,6 +471,10 @@ def plot_pca(classifier, x_symbol, x_data, y_data, index=0,
     # plt.show()
     if title is not None:
         fig.suptitle(title)
+<<<<<<< HEAD
     plt.savefig('pca_{0:02d}.png'.format(index))
+=======
+    plt.savefig('pca_{0:03d}.png'.format(index))
+>>>>>>> 311d5ecef7c880123da6f96baf4032a636bdab07
 if __name__ == '__main__':
     test_mlp()
