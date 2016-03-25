@@ -41,7 +41,7 @@ import sys
 import timeit
 
 import numpy
-import Image
+from PIL import Image
 
 from utils import tile_raster_images
 
